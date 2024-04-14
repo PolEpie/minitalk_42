@@ -6,24 +6,53 @@
 /*   By: pepie <pepie@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 23:27:11 by pepie             #+#    #+#             */
-/*   Updated: 2024/04/12 23:27:11 by pepie            ###   ########.fr       */
+/*   Updated: 2024/04/15 01:09:00 by pepie            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <server.h>
 
-
-
-int	main(void)
+void    send_bytes(char n, int pid)
 {
-	int t;
+    int     i;
+    int     n_positif;
+    bool    is_zero;
 
-	t = 5;
-	ft_printf("%d%d%d%d%d", t >> 1, t >> 2, t >> 3, t >> 4, t >> 5);
-	ft_printf("[STARTED] PID : %d\n", getpid());
-	while (1)
-	{
-		// Do something
-	}
+    i = 7;
+    n_positif = n + 128;
+    ft_printf("Num: %d\n", n_positif);
+    while (i >= 0)
+    {
+        is_zero = (n_positif & (1 << i)) == 0;
+        if (is_zero)
+            kill(pid, SIGUSR1);
+        else
+            kill(pid, SIGUSR2);
+        usleep(100);
+        i--;
+    }
+    ft_printf("\n");
+}
+
+int	main(int argc, char **argv)
+{
+	int pid;
+    int i;
+
+    if (argc != 3)
+    {
+        ft_printf("Usage: %s <PID> <Message>\n", argv[0]);
+        return (1);
+    }
+    i = 0;
+    pid = ft_atoi(argv[1]);
+    while (argv[2][i])
+    {
+        send_bytes(argv[2][i], pid);
+        i++;
+    }
+    send_bytes('\n', pid);
+    ft_printf("Send message to: %d %s\n", pid, argv[2]);
+
 	return (0);
 }
