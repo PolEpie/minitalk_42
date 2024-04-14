@@ -10,10 +10,20 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <client.h>
+#include <server.h>
+
+
 
 int	main(void)
 {
-	ft_printf("Hello, world!\n");
+	int t;
+
+	t = 5;
+	ft_printf("%d%d%d%d%d", t >> 1, t >> 2, t >> 3, t >> 4, t >> 5);
+	ft_printf("[STARTED] PID : %d\n", getpid());
+	while (1)
+	{
+		// Do something
+	}
 	return (0);
 }

@@ -10,7 +10,8 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME		=	push_swap
+CLIENT		=	client
+SERVER		=	server
 LIBFT		=	libft/
 LIBFT_A		=	$(addprefix $(LIBFT), libft.a)
 
@@ -29,12 +30,12 @@ OBJS_SERVER		=	$(SRCS_SERVER:/%.c=%.o)
 all:			client server
 
 client:			$(OBJS_CLIENT) $(LIBFT_A)
-				$(CC) $(CFLAGS) $(OBJS_CLIENT) -L$(LIBFT) -lft -o $(NAME_CLIENT)
-				@echo "Linked into executable \033[0;32mCLIENT\033[0m."
+				$(CC) $(CFLAGS) $(OBJS_CLIENT) -L$(LIBFT) -lft -o $(CLIENT)
+				@echo "Linked into executable \033[0;32m$(CLIENT)\033[0m."
 
 server:			$(OBJS_SERVER) $(LIBFT_A)
-				$(CC) $(CFLAGS) $(OBJS_SERVER) -L$(LIBFT) -lft -o $(NAME_SERVER)
-				@echo "Linked into executable \033[0;32mSERVER\033[0m."
+				$(CC) $(CFLAGS) $(OBJS_SERVER) -L$(LIBFT) -lft -o $(SERVER)
+				@echo "Linked into executable \033[0;32m$(SERVER)\033[0m."
 
 test:			$(NAME)
 				@./$(NAME) 99 0 25 -38 10 7 42
