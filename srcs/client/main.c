@@ -20,7 +20,6 @@ void    send_bytes(char n, int pid)
 
     i = 7;
     n_positif = n + 128;
-    ft_printf("Num: %d\n", n_positif);
     while (i >= 0)
     {
         is_zero = (n_positif & (1 << i)) == 0;
@@ -28,17 +27,35 @@ void    send_bytes(char n, int pid)
             kill(pid, SIGUSR1);
         else
             kill(pid, SIGUSR2);
-        usleep(100);
+        usleep(200);
         i--;
     }
-    ft_printf("\n");
+}
+
+void    sig_handler(int signum, siginfo_t *info, void *context)
+{
+	ft_printf("", context, info);
+     if (signum == SIGUSR1)
+    {
+        ft_printf("[SERVER]\t->\t[CLIENT] Message successfully received!\n");
+    }
+    else
+    {
+        char *msg = "Reçu signal inattendu\n";
+        write(STDERR_FILENO, msg, ft_strlen(msg));
+        _exit(EXIT_FAILURE);
+    }
 }
 
 int	main(int argc, char **argv)
 {
+	struct sigaction        sa;
 	int pid;
     int i;
 
+	sa.sa_flags = SA_SIGINFO;
+    sa.sa_sigaction = sig_handler;
+	sigaction(SIGUSR1, &sa, NULL);
     if (argc != 3)
     {
         ft_printf("Usage: %s <PID> <Message>\n", argv[0]);
@@ -46,13 +63,13 @@ int	main(int argc, char **argv)
     }
     i = 0;
     pid = ft_atoi(argv[1]);
+    ft_printf("[CLIENT]\t->\t[SERVER] Sending message to: %d\n", pid);
     while (argv[2][i])
     {
         send_bytes(argv[2][i], pid);
         i++;
     }
-    send_bytes('\n', pid);
-    ft_printf("Send message to: %d %s\n", pid, argv[2]);
-
+    ft_printf("[CLIENT]\t->\t[SERVER] Message sent!\n");
+    send_bytes('\0', pid);
 	return (0);
 }
